@@ -1,17 +1,36 @@
 package com.example.dblogic;
 
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.util.ArrayList;
-
 public class MainActivity extends AppCompatActivity {
 
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        //db를 생성하고 객체를 가져옵니다.
+        NotiDBHelper DBHelper = new NotiDBHelper(this);
+        SQLiteDatabase db = DBHelper.getWritableDatabase();
+
+
+/*
+        // BtnOnClickListener의 객체 생성.
+        BtnOnClickListener onClickListener = new BtnOnClickListener() ;
+
+        //모든 알림 조회 버튼 눌림
+        Button allButton = (Button) findViewById(R.id.AllButton) ;
+        allButton.setOnClickListener(onClickListener) ;
+
+ */
+    }
+
+    /*
     //알림을 디비에서 긁어와줄께요
     class BtnOnClickListener implements Button.OnClickListener {
         @Override
@@ -24,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
                     String sql = "select * from NotiTable";
 
                     // 쿼리실행
-                    Cursor c = NotiDB.rawQuery(sql, null);
+                    Cursor c = db.rawQuery(sql, null);
 
                     // 선택된 로우를 끝까지 반복하며 데이터를 가져온다.
 
@@ -60,29 +79,7 @@ public class MainActivity extends AppCompatActivity {
 
         }
     }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        //NotiTable을 생성하고 객체를 가져옵니다.
-        NotiDBHelper NotiDBHelper = new NotiDBHelper(this);
-        SQLiteDatabase NotiDB = NotiDBHelper.getWritableDatabase();
-
-        //NounTable을 생성하고 객체를 가져옵니다.
-        NounDBHelper NounDBHelper = new NounDBHelper(this);
-        SQLiteDatabase NounDB = NounDBHelper.getWritableDatabase();
-
-
-
-        // BtnOnClickListener의 객체 생성.
-        BtnOnClickListener onClickListener = new BtnOnClickListener() ;
-
-        //모든 알림 조회 버튼 눌림
-        Button allButton = (Button) findViewById(R.id.AllButton) ;
-        allButton.setOnClickListener(onClickListener) ;
-    }
+     */
 
 
 
