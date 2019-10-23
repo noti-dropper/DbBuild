@@ -20,16 +20,17 @@ public class MainActivity extends AppCompatActivity {
 
     SQLiteDatabase db;
 
-    JSONObject similarityAPIResult;
-    JSONObject analyzeAPIResult;
+    JSONObject similarityAPIResult;   // 유사도 결과값  테스트셋
+    JSONObject analyzeAPIResult;      // 명사 분석 결과값 테스트셋
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        createDatabase();
 
+        // 테스트셋 코드
+        //"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""//
         try {
 //            analyzeAPIResult = new JSONObject("{\"result\": [\"하늘\"]}");
             analyzeAPIResult = new JSONObject("{\"result\": [\"오늘\", \"치킨\"]}");
@@ -38,13 +39,102 @@ public class MainActivity extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        //_____________________________________________________________________________________//
 
-        try {
-            whenGetNewNoti("하늘이다.");
-        } catch (JSONException e) {
-            e.printStackTrace();
+
+        // DB 생성 함수
+        createDatabase();
+
+
+        // Service에서 새로운 노티 받았을 때 사용하는 함수
+//        try {
+//            whenGetNewNoti("하늘이다.");
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+
+
+        // 노티 리스트 콜 함수
+        ArrayList<NotiData> list = getNotificationList("order by id desc");
+        // weight 소팅은 ArrayList.sort()를 써야 한다.
+        // https://offbyone.tistory.com/154
+
+        for(int i = 0; i < list.size(); i++)
+            Log.e("NOTIFiCATION DB: ", "title: "+list.get(i).title+", msg: \""+list.get(i).msg+"\", isRead: "+ list.get(i).isRead+", weight: " + list.get(i).weight);
+
+
+        // 리스트 +- 처리 함수
+        // 제작 예정..
+        // giveWeightById(int id, boolean isPositive)
+
+    }
+
+
+//    public void giveWeightById(int id, boolean isPositive) {
+//
+//        db.execSQL("update nown",null);
+//
+//    }
+
+
+
+
+    private class NotiData {
+        public String title;
+        public String msg;
+        public int weight;
+        public boolean isRead;
+        NotiData(String title, String msg, int weight, boolean isRead) {
+            this.title = title;
+            this.msg = msg;
+            this.weight = weight;
+            this.isRead = isRead;
         }
     }
+
+    public ArrayList<NotiData> getNotificationList(String query) {
+
+        if(db == null){
+            Log.e("=====", "데이터베이스가 생성되지 않았습니다. <createDatabase()>");
+            return null;
+        }
+
+        ArrayList<NotiData> result = new ArrayList<>();
+
+        Cursor cursor = db.rawQuery("select title, msg, nlink, isread from notification "+query, null);
+        cursor.moveToFirst();
+
+
+        for(int i=0; i<cursor.getCount(); i++){
+
+            int tmpWeight = 0;
+            String[] nLinks = cursor.getString(2).split(",");
+            for(int j=0; j<nLinks.length; j++) {
+                int nounId = Integer.parseInt(nLinks[j]);
+                Cursor c = db.rawQuery("select weight from noun where id="+nounId,null);
+                c.moveToFirst();
+                tmpWeight += c.getInt(0);
+            }
+            result.add(new NotiData(cursor.getString(0), cursor.getString(1), tmpWeight, cursor.getInt(3) == 1 ? true : false));
+            cursor.moveToNext();
+        }
+
+        return result;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -191,6 +281,7 @@ public class MainActivity extends AppCompatActivity {
             db.execSQL("update noun set weight = " + (int)totalWeight + " where noun=\"" + similarSample.get(i) + "\"");
             totalWeight = 0.0;
         }
+        cursor.close();
     }
 }
 
