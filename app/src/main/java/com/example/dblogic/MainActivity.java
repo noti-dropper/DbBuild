@@ -1,8 +1,11 @@
 package com.example.dblogic;
 
 import android.os.Bundle;
+import android.util.Log;
+
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.ArrayList;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -24,6 +27,12 @@ public class MainActivity extends AppCompatActivity {
 //            e.printStackTrace();
 //        }
 //
+//        명사 테이블 전부 가져옴
+//        ArrayList<NounDTO> list = database.getNounList();
+//        for(int i =0 ; i < list.size(); i++){
+//            Log.e("========", list.get(i).noun + "/" + list.get(i).weight);
+//        }
+
 //        NOTIFICATION 데이터베이스에 대한 weight값 업데이트
 //        database.updateNotiWeight(2,true);
 //

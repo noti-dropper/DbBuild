@@ -40,6 +40,30 @@ public class DBManager {
     }
 
 
+
+    public ArrayList<NounDTO> getNounList() {
+
+        if(db == null){
+            Log.e("=====", "데이터베이스가 생성되지 않았습니다. <createDatabase()>");
+            return null;
+        }
+
+        ArrayList<NounDTO> result = new ArrayList<>();
+
+        Cursor cursor = db.rawQuery("select id, noun, weight, views from noun ", null);
+        cursor.moveToFirst();
+
+        for(int i=0; i<cursor.getCount(); i++){
+            result.add(new NounDTO(cursor.getInt(0), cursor.getString(1), cursor.getInt(2), cursor.getInt(3)));
+            cursor.moveToNext();
+        }
+        cursor.close();
+
+        return result;
+    }
+
+
+
     public ArrayList<NotiDataDTO> getNotificationList() {
         return getNotificationList("");
     }

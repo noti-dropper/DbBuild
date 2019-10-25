@@ -9,7 +9,7 @@ public class NotiDataDTO {
     public boolean isRead;
     public String pkgName;
 
-    NotiDataDTO(int id, String pkgName, String title, String msg, int weight, boolean isRead) {
+    public NotiDataDTO(int id, String pkgName, String title, String msg, int weight, boolean isRead) {
         this.id = id;
         this.title = title;
         this.msg = msg;
